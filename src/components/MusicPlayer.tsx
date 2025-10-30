@@ -27,11 +27,13 @@ export const MusicPlayer = () => {
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [needsInteraction, setNeedsInteraction] = useState(false);
   
   const playerRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const volumeTimeoutRef = useRef<NodeJS.Timeout>();
   const progressIntervalRef = useRef<NodeJS.Timeout>();
+  const hasAttemptedAutoplay = useRef(false);
 
   // Load YouTube IFrame API
   useEffect(() => {
@@ -58,6 +60,23 @@ export const MusicPlayer = () => {
     };
   }, []);
 
+  // Add click listener to enable autoplay on first user interaction
+  useEffect(() => {
+    const handleFirstClick = () => {
+      if (isReady && !isPlaying && playerRef.current) {
+        console.log("First user interaction detected, attempting autoplay");
+        playerRef.current.playVideo();
+        setNeedsInteraction(false);
+      }
+    };
+
+    // Only add listener if autoplay hasn't worked yet
+    if (isReady && !isPlaying && needsInteraction) {
+      document.addEventListener('click', handleFirstClick, { once: true });
+      return () => document.removeEventListener('click', handleFirstClick);
+    }
+  }, [isReady, isPlaying, needsInteraction]);
+
   const initializePlayer = () => {
     playerRef.current = new window.YT.Player("youtube-player", {
       height: "0",
@@ -76,10 +95,31 @@ export const MusicPlayer = () => {
           console.log("Player ready");
           setIsReady(true);
           event.target.setVolume(70);
-          // Force play after a short delay to ensure autoplay works
-          setTimeout(() => {
-            event.target.playVideo();
-          }, 100);
+          
+          // Try to autoplay
+          if (!hasAttemptedAutoplay.current) {
+            hasAttemptedAutoplay.current = true;
+            
+            // Multiple attempts to autoplay
+            const attemptPlay = () => {
+              try {
+                event.target.playVideo();
+                console.log("Autoplay attempted");
+              } catch (error) {
+                console.log("Autoplay failed:", error);
+                setNeedsInteraction(true);
+              }
+            };
+            
+            // First attempt immediately
+            attemptPlay();
+            
+            // Second attempt after 500ms
+            setTimeout(attemptPlay, 500);
+            
+            // Third attempt after 1000ms
+            setTimeout(attemptPlay, 1000);
+          }
         },
         onStateChange: (event: any) => {
           console.log("Player state changed:", event.data);
@@ -148,6 +188,11 @@ export const MusicPlayer = () => {
 
   const handlePlayPause = () => {
     if (!isReady || !playerRef.current) return;
+    
+    // Clear the interaction warning when user plays
+    if (needsInteraction) {
+      setNeedsInteraction(false);
+    }
     
     if (isPlaying) {
       playerRef.current.pauseVideo();
@@ -250,6 +295,15 @@ export const MusicPlayer = () => {
         >
           {/* Main Player */}
           <div className="p-5 space-y-4">
+            {/* User Interaction Prompt */}
+            {needsInteraction && !isPlaying && (
+              <div className="bg-primary/10 border border-primary/20 rounded-2xl p-3 animate-pulse">
+                <p className="text-xs text-primary text-center font-medium">
+                  Click play to start the music 🎵
+                </p>
+              </div>
+            )}
+            
             {/* Now Playing with Volume Control */}
             <div className="flex items-center gap-3 justify-between">
               <div className="flex-1 min-w-0">

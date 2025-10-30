@@ -17,10 +17,15 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi,
 } from "@/components/ui/carousel";
+import { useEffect } from "react";
 
 const MessageSection = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
 
   const letters = [
     {
@@ -125,7 +130,7 @@ const MessageSection = () => {
             Happy Birthday{" "}
             <span className="text-primary font-semibold">Rain</span> , again,
             Sorry in advance that this is too simple T^T , Suwiii po.... sabi
-            sa'yo' something small lang eeee kaya don't expect muchhhh, I don't
+            sa'ko' something small lang eeee kaya don't expect muchhhh, I don't
             know if mahaba ba itong message pero please bear with pirsu, Thank
             youuuuuu Mwaaaaa 💋
           </p>
@@ -318,6 +323,20 @@ const MessageSection = () => {
     },
   ];
 
+  // Track carousel changes
+  useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap());
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
+
   return (
     <section
       id="message"
@@ -328,16 +347,40 @@ const MessageSection = () => {
           isExpanded ? "max-w-5xl" : ""
         }`}
       >
-        <Carousel className="w-full">
+        {/* Progress Indicator */}
+        <div className="mb-6 text-center">
+          <p className="font-game text-xs text-muted-foreground mb-3">
+            💌 Birthday Letter {current + 1} of {count} 💌
+          </p>
+          <div className="flex justify-center gap-2">
+            {Array.from({ length: count }).map((_, i) => (
+              <div
+                key={i}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  i === current
+                    ? "w-12 bg-primary shadow-[0_0_10px_rgba(139,92,246,0.5)]"
+                    : "w-2 bg-muted-foreground/30"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+
+        <Carousel 
+          className="w-full" 
+          opts={{ loop: true }}
+          setApi={setApi}
+        >
           <CarouselContent>
             {letters.map((letter, index) => (
               <CarouselItem key={index}>
-                <div className="bg-card/90 backdrop-blur-sm border-4 border-secondary rounded-3xl p-8 md:p-12 shadow-[var(--shadow-soft)] relative">
+                <div className="bg-card/90 backdrop-blur-sm border-4 border-secondary rounded-3xl p-8 md:p-12 shadow-[var(--shadow-soft)] relative hover:border-primary transition-colors duration-300">
+                  {/* Expand/Minimize Button */}
                   <Button
                     onClick={() => setIsExpanded(!isExpanded)}
                     variant="ghost"
                     size="icon"
-                    className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
+                    className="absolute top-4 right-4 text-muted-foreground hover:text-foreground hover:bg-primary/20 z-10 transition-all"
                   >
                     {isExpanded ? (
                       <Minimize2 size={20} />
@@ -346,24 +389,35 @@ const MessageSection = () => {
                     )}
                   </Button>
 
+                  {/* Icon with subtle animation */}
                   <div className="flex justify-center mb-8">
-                    <div className="relative">{letter.icon}</div>
+                    <div className="relative hover:scale-110 transition-transform duration-300">
+                      {letter.icon}
+                      <div className="absolute inset-0 blur-xl opacity-30 -z-10">
+                        {letter.icon}
+                      </div>
+                    </div>
                   </div>
 
+                  {/* Content */}
                   <div
                     className={`space-y-6 text-center transition-all duration-300 ${
                       isExpanded ? "text-xl md:text-2xl" : ""
                     }`}
                   >
-                    {letter.content}
+                    <div className="space-y-6">
+                      {letter.content}
+                    </div>
 
-                    {/* Achievement section - only if not the last card or if it has achievement */}
+                    {/* Achievement section */}
                     {letter.achievement && (
                       <div className="pt-6 border-t-2 border-primary/20 mt-8">
-                        <p className="font-game text-xs text-muted-foreground mb-4">
-                          ⭐ {letter.achievement.title} ⭐
-                        </p>
-                        <p className="font-sans text-base text-foreground">
+                        <div className="inline-block px-4 py-2 bg-primary/10 rounded-full mb-3">
+                          <p className="font-game text-xs text-primary mb-0">
+                            ⭐ {letter.achievement.title} ⭐
+                          </p>
+                        </div>
+                        <p className="font-sans text-base text-foreground font-semibold">
                           {letter.achievement.name}
                         </p>
                         {letter.achievement.detail && (
@@ -375,18 +429,30 @@ const MessageSection = () => {
                     )}
                   </div>
 
+                  {/* Letter Counter */}
                   <div className="text-center mt-8">
-                    <p className="font-game text-xs text-muted-foreground">
-                      Letter {index + 1} of {letters.length}
-                    </p>
+                    <div className="inline-block px-4 py-2 bg-secondary/10 rounded-full">
+                      <p className="font-game text-xs text-muted-foreground">
+                        Letter {index + 1} of {letters.length}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="left-0 md:-left-12" />
-          <CarouselNext className="right-0 md:-right-12" />
+
+          {/* Enhanced Navigation Arrows */}
+          <CarouselPrevious className="left-0 md:-left-12 hover:scale-110 transition-all duration-200 bg-primary/20 hover:bg-primary/40 border-2 border-primary" />
+          <CarouselNext className="right-0 md:-right-12 hover:scale-110 transition-all duration-200 bg-primary/20 hover:bg-primary/40 border-2 border-primary" />
         </Carousel>
+
+        {/* Swipe Hint for Mobile */}
+        <div className="mt-6 text-center md:hidden animate-pulse">
+          <p className="font-sans text-xs text-muted-foreground">
+            ← Swipe to read more letters →
+          </p>
+        </div>
       </div>
     </section>
   );
