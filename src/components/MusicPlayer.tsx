@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Heart, Play, Pause, SkipForward, SkipBack, Music, ChevronUp, Volume2, VolumeX, Volume1 } from "lucide-react";
+import { Heart, Play, Pause, SkipForward, SkipBack, Music, ChevronUp, Volume2, VolumeX, Volume1, Minimize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
@@ -28,6 +28,7 @@ export const MusicPlayer = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [needsInteraction, setNeedsInteraction] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
   
   const playerRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -281,10 +282,16 @@ export const MusicPlayer = () => {
       <div
         ref={containerRef}
         className={cn(
-          "fixed top-6 left-6 z-50 transition-all duration-300 ease-out animate-fade-in",
-          isExpanded ? "w-96" : "w-80"
+          "fixed z-50 transition-all duration-300 ease-out animate-fade-in",
+          // Desktop: top-left, normal size
+          "md:top-6 md:left-6",
+          // Mobile: bottom center, smaller size
+          "bottom-4 left-4 right-4 md:right-auto",
+          isExpanded ? "md:w-96" : "md:w-80",
+          // Mobile width
+          "w-auto max-w-sm mx-auto md:mx-0"
         )}
-        onMouseEnter={() => setIsExpanded(true)}
+        onMouseEnter={() => !isMinimized && setIsExpanded(true)}
         onMouseLeave={() => setIsExpanded(false)}
       >
         <div
@@ -293,18 +300,66 @@ export const MusicPlayer = () => {
             boxShadow: "var(--shadow-soft), var(--glow-lavender)",
           }}
         >
-          {/* Main Player */}
-          <div className="p-5 space-y-4">
-            {/* User Interaction Prompt */}
-            {needsInteraction && !isPlaying && (
-              <div className="bg-primary/10 border border-primary/20 rounded-2xl p-3 animate-pulse">
-                <p className="text-xs text-primary text-center font-medium">
-                  Click play to start the music 🎵
-                </p>
+          {/* Minimized View (Mobile Only) */}
+          {isMinimized && (
+            <div className="p-3 flex items-center justify-between md:hidden">
+              <div className="flex items-center gap-2 flex-1 min-w-0">
+                <Button
+                  size="icon"
+                  className="h-10 w-10 rounded-full bg-gradient-to-br from-primary via-secondary to-accent shrink-0"
+                  onClick={handlePlayPause}
+                >
+                  {isPlaying ? (
+                    <Pause className="h-5 w-5 text-primary-foreground" />
+                  ) : (
+                    <Play className="h-5 w-5 text-primary-foreground" />
+                  )}
+                </Button>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-muted-foreground">Now playing</p>
+                  <h3 className="text-sm font-semibold text-foreground truncate">
+                    {playlist[currentTrack].title}
+                  </h3>
+                </div>
               </div>
-            )}
-            
-            {/* Now Playing with Volume Control */}
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8 rounded-full shrink-0"
+                onClick={() => setIsMinimized(false)}
+              >
+                <ChevronUp className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+
+          {/* Full Player View */}
+          {!isMinimized && (
+            <>
+              {/* Main Player */}
+              <div className="p-5 space-y-4">
+                {/* Mobile Minimize Button */}
+                <div className="flex justify-end md:hidden mb-2">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-8 w-8 rounded-full"
+                    onClick={() => setIsMinimized(true)}
+                  >
+                    <Minimize2 className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                {/* User Interaction Prompt */}
+                {needsInteraction && !isPlaying && (
+                  <div className="bg-primary/10 border border-primary/20 rounded-2xl p-3 animate-pulse">
+                    <p className="text-xs text-primary text-center font-medium">
+                      Click play to start the music 🎵
+                    </p>
+                  </div>
+                )}
+                
+                {/* Now Playing with Volume Control */}
             <div className="flex items-center gap-3 justify-between">
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-muted-foreground font-medium flex items-center gap-1">
@@ -451,6 +506,8 @@ export const MusicPlayer = () => {
               </div>
             </div>
           </div>
+          </>
+          )}
         </div>
       </div>
     </>
