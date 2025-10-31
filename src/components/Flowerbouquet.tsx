@@ -67,7 +67,7 @@ const FlowerBouquet = () => {
             
             {/* Flower image */}
             <img 
-              src="/roses-bouquet.png" 
+              src="/happy-birthday-rain/roses-bouquet.png" 
               alt="Bouquet of Roses"
               className="relative z-10 w-full h-auto drop-shadow-2xl animate-float-slow"
             />
