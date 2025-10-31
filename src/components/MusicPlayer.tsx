@@ -5,9 +5,9 @@ import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 
 const playlist = [
-  { title: "Happy Birthday!", videoId: "jqYxyd1iSNk" },
-  { title: "Happy na", videoId: "N6-0syjL9nU" },
-  { title: "BS", videoId: "8k0x5Y4xzT8" },
+  { title: "Birthday - Katty Perry", videoId: "jqYxyd1iSNk" },
+  { title: "Birthday - Tagalog Version", videoId: "N6-0syjL9nU" },
+  { title: "Birthday - What?", videoId: "8k0x5Y4xzT8" },
 ];
 
 declare global {
