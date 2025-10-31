@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import HeroSection from "@/components/HeroSection";
 import CountdownTimer from "@/components/CountdownTimer";
 import MessageSection from "@/components/MessageSection";
+import FlowerBouquet from "@/components/FlowerBouquet";
 import Footer from "@/components/Footer";
 import { MusicPlayer } from "@/components/MusicPlayer";
 
@@ -36,6 +37,7 @@ const Index = () => {
           <HeroSection />
           <CountdownTimer isUnlocked={isUnlocked} />
           <MessageSection />
+          <FlowerBouquet />
         </>
       ) : (
         <CountdownTimer isUnlocked={isUnlocked} />

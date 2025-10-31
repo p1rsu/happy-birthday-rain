@@ -66,7 +66,7 @@ const CountdownTimer = ({ isUnlocked }: CountdownTimerProps) => {
         </div>
 
         <div className="bg-card/80 backdrop-blur-sm border-2 border-accent rounded-2xl p-6 shadow-[var(--shadow-soft)] max-w-md mx-auto mb-8">
-          <p className="font-game text-xs text-accent mb-2">🎂 BIRTHDAY POWER-UP READY! 🎂</p>
+          <p className="font-game text-xs text-accent-foreground mb-2">🎂 BIRTHDAY POWER-UP READY! 🎂</p>
           <p className="font-sans text-sm text-foreground">November 2nd, 2025</p>
         </div>
 

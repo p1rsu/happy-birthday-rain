@@ -9,6 +9,7 @@ import {
   Trophy,
   Zap,
   Gamepad2,
+  ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,6 +27,7 @@ const MessageSection = () => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
+  const [showContinue, setShowContinue] = useState(false);
 
   const letters = [
     {
@@ -230,9 +232,7 @@ const MessageSection = () => {
           </p>
 
           <p className="font-sans text-lg md:text-xl text-foreground leading-relaxed">
-            May your birthday be filled with as much{" "}
-            <span className="text-primary font-semibold">joy</span> as you bring
-            to others! 💝
+            Wishing you endless happiness and all the best adventures ahead! 💝
           </p>
         </>
       ),
@@ -263,9 +263,7 @@ const MessageSection = () => {
           </p>
 
           <p className="font-sans text-lg md:text-xl text-foreground leading-relaxed">
-            May your birthday be filled with as much{" "}
-            <span className="text-primary font-semibold">joy</span> as you bring
-            to others! 💝
+            Wishing you endless happiness and all the best adventures ahead! 💝
           </p>
         </>
       ),
@@ -333,9 +331,24 @@ const MessageSection = () => {
     setCurrent(api.selectedScrollSnap());
 
     api.on("select", () => {
-      setCurrent(api.selectedScrollSnap());
+      const selectedIndex = api.selectedScrollSnap();
+      setCurrent(selectedIndex);
+      
+      // Show continue button when on last slide
+      if (selectedIndex === letters.length - 1) {
+        setShowContinue(true);
+      } else {
+        setShowContinue(false);
+      }
     });
-  }, [api]);
+  }, [api, letters.length]);
+
+  const handleContinue = () => {
+    document.getElementById('flowers')?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    });
+  };
 
   return (
     <section
@@ -368,7 +381,7 @@ const MessageSection = () => {
 
         <Carousel 
           className="w-full" 
-          opts={{ loop: true }}
+          opts={{ loop: false }}
           setApi={setApi}
         >
           <CarouselContent>
@@ -447,12 +460,28 @@ const MessageSection = () => {
           <CarouselNext className="right-0 md:-right-12 hover:scale-110 transition-all duration-200 bg-primary/20 hover:bg-primary/40 border-2 border-primary" />
         </Carousel>
 
+        {/* Continue Button - Shows on last slide */}
+        {showContinue && (
+          <div className="mt-8 text-center animate-fade-in">
+            <Button
+              onClick={handleContinue}
+              size="lg"
+              className="bg-gradient-to-r from-primary via-secondary to-accent hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl font-game"
+            >
+              Continue to Surprise
+              <ChevronDown className="ml-2 h-5 w-5 animate-bounce" />
+            </Button>
+          </div>
+        )}
+
         {/* Swipe Hint for Mobile */}
-        <div className="mt-6 text-center md:hidden animate-pulse">
-          <p className="font-sans text-xs text-muted-foreground">
-            ← Swipe to read more letters →
-          </p>
-        </div>
+        {!showContinue && (
+          <div className="mt-6 text-center md:hidden animate-pulse">
+            <p className="font-sans text-xs text-muted-foreground">
+              ← Swipe to read more letters →
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );
