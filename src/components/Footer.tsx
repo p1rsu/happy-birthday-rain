@@ -45,7 +45,7 @@ const Footer = ({ devMode = false, onToggleDevMode }: FooterProps) => {
         <div className="pt-4 border-t border-primary/10">
           <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground/40 font-mono">
             <Code className="h-3 w-3" />
-            <span>v1.0.0 • Birthday Edition 2025</span>
+            <span>v1.0.0 • Pirsu 2025</span>
           </div>
         </div>
 
