@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 const playlist = [
   { title: "Birthday - Katty Perry", videoId: "jqYxyd1iSNk" },
   { title: "Birthday - Tagalog Version", videoId: "N6-0syjL9nU" },
-  { title: "Birthday - What?", videoId: "8k0x5Y4xzT8" },
+  { title: "Birthday - What?", videoId: "se5S1r2lpWY" },
 ];
 
 declare global {
