@@ -5,6 +5,7 @@ import MessageSection from "@/components/MessageSection";
 import FlowerBouquet from "@/components/FlowerBouquet";
 import Footer from "@/components/Footer";
 import { MusicPlayer } from "@/components/MusicPlayer";
+import config from "../../config.json";
 
 const Index = () => {
   const targetDate = new Date("2025-11-02T00:00:00").getTime();
@@ -36,7 +37,7 @@ const Index = () => {
         <>
           <HeroSection />
           <CountdownTimer isUnlocked={isUnlocked} />
-          <MessageSection />
+          {config.features.showMessageSection && <MessageSection />}
           <FlowerBouquet />
         </>
       ) : (
