@@ -135,16 +135,20 @@ const FlowerBouquet = () => {
           onClick={() => setShowModal(false)}
         >
           <div
-            className="bg-white rounded-2xl shadow-2xl p-8 max-w-lg mx-4 animate-fade-in"
+            className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl mx-4 animate-fade-in relative"
             onClick={(e) => e.stopPropagation()}
+            style={{
+              boxShadow: '0 0 60px rgba(251, 207, 232, 0.6), 0 0 100px rgba(252, 231, 243, 0.5), 0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+            }}
           >
             <div className="text-center">
               {/* Mystbloom Image */}
-              <div className="mb-6">
+              <div className="mb-6 relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-pink-200 via-pink-300 to-rose-300 blur-2xl opacity-40 rounded-xl"></div>
                 <img
                   src="/happy-birthday-rain/mystbloom.webp"
                   alt="Mystbloom Vandal"
-                  className="w-full h-auto rounded-xl shadow-lg"
+                  className="w-full h-auto rounded-xl shadow-lg scale-110 relative z-10"
                 />
               </div>
 
