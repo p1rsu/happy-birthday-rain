@@ -116,10 +116,7 @@ const FlowerBouquet = () => {
           }`}
         >
           <p className="font-sans text-lg md:text-xl text-foreground leading-relaxed mb-4">
-            🌹 May your day be as beautiful as these roses 🌹
-          </p>
-          <p className="font-sans text-base text-muted-foreground">
-            💖 And may all your dreams bloom into reality 💖
+             May your day be as beautiful as these roses 
           </p>
         </div>
 
@@ -138,18 +135,21 @@ const FlowerBouquet = () => {
           onClick={() => setShowModal(false)}
         >
           <div
-            className="bg-white rounded-2xl shadow-2xl p-8 max-w-md mx-4 animate-fade-in"
+            className="bg-white rounded-2xl shadow-2xl p-8 max-w-lg mx-4 animate-fade-in"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-center">
-              <div className="mb-4 flex justify-center">
-                <div className="bg-rose-100 rounded-full p-4">
-                  <Heart className="h-12 w-12 text-rose-500" fill="currentColor" />
-                </div>
+              {/* Mystbloom Image */}
+              <div className="mb-6">
+                <img
+                  src="/happy-birthday-rain/mystbloom.webp"
+                  alt="Mystbloom Vandal"
+                  className="w-full h-auto rounded-xl shadow-lg"
+                />
               </div>
 
               <h3 className="font-game text-2xl text-rose-600 mb-4">
-                Riot Client Launched! 🌹
+                Riot Client Launched! 👊🏼
               </h3>
 
               <p className="font-sans text-base text-gray-700 mb-6 leading-relaxed">
@@ -157,7 +157,7 @@ const FlowerBouquet = () => {
               </p>
 
               <p className="font-sans text-sm text-gray-500 mb-6">
-                💖 Enjoy your game! 💖
+                Enjoy your Mystbloom 2.0! 💐
               </p>
 
               <button
