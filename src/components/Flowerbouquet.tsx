@@ -143,12 +143,12 @@ const FlowerBouquet = () => {
           >
             <div className="text-center">
               {/* Mystbloom Image */}
-              <div className="mb-6 relative">
+              <div className="mb-6 relative px-4 py-6">
                 <div className="absolute inset-0 bg-gradient-to-r from-pink-200 via-pink-300 to-rose-300 blur-2xl opacity-40 rounded-xl"></div>
                 <img
                   src="/happy-birthday-rain/mystbloom.webp"
                   alt="Mystbloom Vandal"
-                  className="w-full h-auto rounded-xl shadow-lg scale-110 relative z-10"
+                  className="w-full h-auto rounded-xl shadow-lg relative z-10"
                 />
               </div>
 
